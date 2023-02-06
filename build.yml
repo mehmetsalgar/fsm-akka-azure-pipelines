@@ -1,4 +1,4 @@
-name: Build with Java / Gradle
+name: Java_Gradle_Build
 
 pool:
   vmImage: ubuntu-latest
