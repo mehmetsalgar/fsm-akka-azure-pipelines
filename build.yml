@@ -1,16 +1,6 @@
 name: Java_Gradle_Build
 
-pool:
-  vmImage: ubuntu-latest
-
-variables:
-- group: HELM_VARIABLES
-- group: DOCKER_VARIABLES
-
-stages:
-- stage: Build
-  displayName: Build
-  jobs:
+jobs:
   - job: CalculateVersion
     displayName: Calculate Version
     pool:
