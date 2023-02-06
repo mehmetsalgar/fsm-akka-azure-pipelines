@@ -1,3 +1,7 @@
+parameters:
+  - name: 'source-repo'
+    type: string
+
 jobs:
   - job: CalculateVersion
     displayName: Calculate Version
@@ -44,4 +48,4 @@ jobs:
         tasks: 'build -Pversion=$(version) --no-daemon'
      - pwsh: |
          helm registry login fsmakka.azurecr.io --username $(HELM_USER) --password $(HELM_PASSWORD)
-         helm push /home/vsts/work/1/s/build/helm/charts/fraud-prevention-application-$(version).tgz oci://fsmakka.azurecr.io/helm
+         helm push /home/vsts/work/1/s/build/helm/charts/${{ source-repo }}-$(version).tgz oci://fsmakka.azurecr.io/helm
