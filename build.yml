@@ -1,3 +1,9 @@
+trigger:
+  paths:
+   exclude:
+     - '**/*.yml'
+     - '**/*.yaml'
+
 parameters:
   - name: 'source-repo'
     type: string
