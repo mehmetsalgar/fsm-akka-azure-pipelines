@@ -1,4 +1,4 @@
-name: azurepipeline
+name: continuous_deployment_development
 
 pool:
   vmImage: ubuntu-latest
