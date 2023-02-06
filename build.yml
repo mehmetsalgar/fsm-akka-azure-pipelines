@@ -27,6 +27,7 @@ jobs:
       vmImage: ubuntu-latest
     variables:
       version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
+      source-repo: ${{ parameters.source-repo }}
     steps:
      - task: Gradle@3
        env:
@@ -48,4 +49,4 @@ jobs:
         tasks: 'build -Pversion=$(version) --no-daemon'
      - pwsh: |
          helm registry login fsmakka.azurecr.io --username $(HELM_USER) --password $(HELM_PASSWORD)
-         helm push /home/vsts/work/1/s/build/helm/charts/${{ parameters.source-repo }}-$(version).tgz oci://fsmakka.azurecr.io/helm
+         helm push /home/vsts/work/1/s/build/helm/charts/$(source-repo)-$(version).tgz oci://fsmakka.azurecr.io/helm
