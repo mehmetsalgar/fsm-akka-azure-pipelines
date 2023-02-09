@@ -1,0 +1,27 @@
+parameters:
+  - name: definitionId
+    type: string
+  - name: inputs
+    type: string 
+
+steps:
+  - task: PowerShell@2
+    env:
+      SECURITY_TOKEN: $(System.AccessToken)
+    inputs:
+      targetType: inline
+      script: |
+        $url = 'https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds?api-version=5.0'
+        Write-Host  "URL: $url"
+        $headers = New-Object "System.Collections.Generic.Dictionary[[String], [String]]"
+        $headers.Add("Content-Type", "application/json")
+        $headers.Add("Authorization", "Bearer $env:SECURITY_TOKEN")
+        $body = '
+        {
+          "definition": { "id": "7" },
+          "templateParameters": {"sourceRepo":  "fraud-prevention", "branchName":  "development"}
+        }
+        '
+        $response = Invoke-RestMethod $url -Method 'POST' -Headers $headers -Body $body
+        Write-Host "Pipeline = ($response | ConvertTo-Json -Depth 100)"
+
