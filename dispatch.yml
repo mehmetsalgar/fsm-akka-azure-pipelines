@@ -4,6 +4,12 @@ parameters:
   - name: inputs
     type: string 
 
+variables:
+  - name: definition-id
+    value: ${{ parameters.definitionId }}
+  - name: inputs
+    value: ${{ parameters.inputs }}
+
 steps:
   - task: PowerShell@2
     env:
@@ -18,10 +24,9 @@ steps:
         $headers.Add("Authorization", "Bearer $env:SECURITY_TOKEN")
         $body = '
         {
-          "definition": { "id": "7" },
-          "templateParameters": {"sourceRepo":  "fraud-prevention", "branchName":  "development"}
+          "definition": { "id": "$(definition-id)" },
+          "templateParameters": {$(inputs)}
         }
         '
         $response = Invoke-RestMethod $url -Method 'POST' -Headers $headers -Body $body
         Write-Host "Pipeline = ($response | ConvertTo-Json -Depth 100)"
-
