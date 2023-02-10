@@ -20,7 +20,7 @@ steps:
         $headers.Add("Authorization", "Bearer $env:SECURITY_TOKEN")
         $body = '
         {
-          "definition": { "id": "$env:DEFINITION_ID" }
+          "definition": { "id": "9" }
         }
         '
         $response = Invoke-RestMethod $url -Method 'POST' -Headers $headers -Body $body
