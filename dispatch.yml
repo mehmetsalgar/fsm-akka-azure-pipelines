@@ -26,7 +26,7 @@ steps:
         {
           "definition": { "id": ' + $definitionid + ' },
           "sourceBranch": "' + $env:SOURCE_BRANCH + '",
-          "templateParameters": {' + ($null -not -eq $env:INPUTS)? $env:INPUTS  : '' + '}
+          "templateParameters": {' + ($null -ne $env:INPUTS)? $env:INPUTS  : '' + '}
         }
         '
         Write-Host  "BODY: $body"
