@@ -1,6 +1,7 @@
 parameters:
   - name: definitionId
     type: string
+  - name: sourceBranch
   - name: inputs
     type: string 
 
@@ -9,6 +10,7 @@ steps:
     env:
       SECURITY_TOKEN: $(System.AccessToken)
       DEFINITION_ID: ${{ parameters.definitionId }}
+      SOURCE_BRANCH: ${{ parameters.sourceBranch }}
       INPUTS: ${{ parameters.inputs }}
     inputs:
       targetType: inline
@@ -22,7 +24,7 @@ steps:
         $body = '
         {
           "definition": { "id": ' + $definitionid + ' },
-          "sourceBranch": "development"
+          "sourceBranch": "' + $env:SOURCE_BRANCH + '"
         }
         '
         Write-Host  "BODY: $body"
