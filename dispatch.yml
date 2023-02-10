@@ -4,16 +4,12 @@ parameters:
   - name: inputs
     type: string 
 
-variables:
-  - name: definition-id
-    value: ${{ parameters.definitionId }}
-  - name: inputs
-    value: ${{ parameters.inputs }}
-
 steps:
   - task: PowerShell@2
     env:
       SECURITY_TOKEN: $(System.AccessToken)
+      DEFINITION_ID: ${{ parameters.definitionId }}
+      INPUTS: ${{ parameters.inputs }}
     inputs:
       targetType: inline
       script: |
@@ -24,8 +20,8 @@ steps:
         $headers.Add("Authorization", "Bearer $env:SECURITY_TOKEN")
         $body = '
         {
-          "definition": { "id": "$(definition-id)" },
-          "templateParameters": {$(inputs)}
+          "definition": { "id": "$env:DEFINITION_ID" },
+          "templateParameters": {$env:INPUTS}
         }
         '
         $response = Invoke-RestMethod $url -Method 'POST' -Headers $headers -Body $body
