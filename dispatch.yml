@@ -22,11 +22,12 @@ steps:
         $headers.Add("Content-Type", "application/json")
         $headers.Add("Authorization", "Bearer $env:SECURITY_TOKEN")
         $definitionid = $env:DEFINITION_ID
+        $inputs = if($null -ne $env:INPUTS) { $env:INPUTS } else { '' }
         $body = '
         {
           "definition": { "id": ' + $definitionid + ' },
           "sourceBranch": "' + $env:SOURCE_BRANCH + '",
-          "templateParameters": {' + ($null -ne $env:INPUTS)? $env:INPUTS  : '' + '}
+          "templateParameters": {' + $inputs + '}
         }
         '
         Write-Host  "BODY: $body"
