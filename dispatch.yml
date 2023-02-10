@@ -2,6 +2,7 @@ parameters:
   - name: definitionId
     type: string
   - name: sourceBranch
+    type: string
   - name: inputs
     type: string 
 
