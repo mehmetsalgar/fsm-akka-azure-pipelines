@@ -24,5 +24,6 @@ steps:
           "sourceBranch": "development"
         }
         '
+        Write-Host  "BODY: $body"
         $response = Invoke-RestMethod $url -Method 'POST' -Headers $headers -Body $body
         Write-Host "Pipeline = ($response | ConvertTo-Json -Depth 100)"
