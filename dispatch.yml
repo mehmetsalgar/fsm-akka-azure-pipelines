@@ -1,7 +1,7 @@
 parameters:
   - name: definitionId
     type: string
-  - name: sourceBranch
+  - name: branchName
     type: string
   - name: inputs
     type: string 
@@ -11,7 +11,7 @@ steps:
     env:
       SECURITY_TOKEN: $(System.AccessToken)
       DEFINITION_ID: ${{ parameters.definitionId }}
-      SOURCE_BRANCH: ${{ parameters.sourceBranch }}
+      SOURCE_BRANCH: ${{ parameters.branchName }}
       INPUTS: ${{ parameters.inputs }}
     inputs:
       targetType: inline
