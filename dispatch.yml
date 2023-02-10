@@ -20,7 +20,7 @@ steps:
         $headers.Add("Authorization", "Bearer $env:SECURITY_TOKEN")
         $body = '
         {
-          "definition": { "id": ${{ env:DEFINITION_ID }} },
+          "definition": { "id": '$env:DEFINITION_ID' },
           "sourceBranch": "development"
         }
         '
