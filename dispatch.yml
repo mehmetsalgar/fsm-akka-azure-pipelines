@@ -18,9 +18,10 @@ steps:
         $headers = New-Object "System.Collections.Generic.Dictionary[[String], [String]]"
         $headers.Add("Content-Type", "application/json")
         $headers.Add("Authorization", "Bearer $env:SECURITY_TOKEN")
+        $definitionid = $env:DEFINITION_ID
         $body = '
         {
-          "definition": { "id": '$env:DEFINITION_ID' },
+          "definition": { "id": ' + $definitionid + ' },
           "sourceBranch": "development"
         }
         '
