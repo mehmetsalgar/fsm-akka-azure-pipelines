@@ -25,7 +25,8 @@ steps:
         $body = '
         {
           "definition": { "id": ' + $definitionid + ' },
-          "sourceBranch": "' + $env:SOURCE_BRANCH + '"
+          "sourceBranch": "' + $env:SOURCE_BRANCH + '",
+          "templateParameters": {' + $env:INPUTS + '}
         }
         '
         Write-Host  "BODY: $body"
