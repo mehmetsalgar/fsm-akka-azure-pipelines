@@ -8,6 +8,7 @@ parameters:
 
 steps:
   - task: PowerShell@2
+    displayName: Triggering another pipeline
     env:
       SECURITY_TOKEN: $(System.AccessToken)
       DEFINITION_ID: ${{ parameters.definitionId }}
@@ -33,3 +34,14 @@ steps:
         Write-Host  "BODY: $body"
         $response = Invoke-RestMethod $url -Method 'POST' -Headers $headers -Body $body
         Write-Host "Pipeline = ($response | ConvertTo-Json -Depth 100)"
+        $buildId = $response.id
+        $buildInfo = ( Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" -Method Get)
+        while($response.status -eq "inProgress" -or $response.status -eq "notStarted") # keep checking till build completed
+        {
+            Write-Output "Build is $($response.status)... Sleep for 5 seconds.."
+            Start-Sleep -Seconds 5 # Start sleep for 5 seconds
+            $response = ( Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" )
+        }
+
+        Write-Output "Build Status : $($buildInfo.status)" # print build status
+        Write-Output "Build Result : $($buildInfo.result)" # print build result
