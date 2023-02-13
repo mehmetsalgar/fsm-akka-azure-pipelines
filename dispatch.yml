@@ -35,12 +35,12 @@ steps:
         $response = Invoke-RestMethod $url -Method 'POST' -Headers $headers -Body $body
         Write-Host "Pipeline = ($response | ConvertTo-Json -Depth 100)"
         $buildId = $response.id
-        $buildInfo = ( Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" -Method Get)
+        $buildInfo = (Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" -Method Get -Headers $headers)
         while($response.status -eq "inProgress" -or $response.status -eq "notStarted") # keep checking till build completed
         {
             Write-Output "Build is $($response.status)... Sleep for 5 seconds.."
             Start-Sleep -Seconds 5 # Start sleep for 5 seconds
-            $buildInfo = ( Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" )
+            $buildInfo = (Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" -Method Get -Headers $headers)
             Write-Host "BuildInfo = ($buildInfo | ConvertTo-Json -Depth 100)"
         }
 
