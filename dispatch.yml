@@ -40,7 +40,8 @@ steps:
         {
             Write-Output "Build is $($response.status)... Sleep for 5 seconds.."
             Start-Sleep -Seconds 5 # Start sleep for 5 seconds
-            $response = ( Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" )
+            $buildInfo = ( Invoke-RestMethod "https://dev.azure.com/salgarswtor/fsm-akka-4eyes/_apis/build/builds/${buildID}?api-version=5.0" )
+            Write-Host "BuildInfo = ($buildInfo | ConvertTo-Json -Depth 100)"
         }
 
         Write-Output "Build Status : $($buildInfo.status)" # print build status
