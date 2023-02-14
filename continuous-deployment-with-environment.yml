@@ -1,8 +1,6 @@
 parameters:
   - name: repoName
     type: string
-  - name: serviceName
-    type: string
   - name: branchName
     type: string
   - name: umbrellaChartBaseName
