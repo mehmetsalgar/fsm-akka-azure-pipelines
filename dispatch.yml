@@ -14,6 +14,7 @@ steps:
       DEFINITION_ID: ${{ parameters.definitionId }}
       SOURCE_BRANCH: ${{ parameters.branchName }}
       INPUTS: ${{ parameters.inputs }}
+      TRIGGER_INFO: $(Build.SourceVersionMessage)
     inputs:
       targetType: inline
       script: |
@@ -28,7 +29,8 @@ steps:
         {
           "definition": { "id": ' + $definitionid + ' },
           "sourceBranch": "' + $env:SOURCE_BRANCH + '",
-          "templateParameters": {' + $inputs + '}
+          "templateParameters": {' + $inputs + '},
+          "triggerInfo": "' + $env:TRIGGER_INFO + '"
         }
         '
         Write-Host  "BODY: $body"
