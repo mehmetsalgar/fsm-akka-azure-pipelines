@@ -1,6 +1,8 @@
 parameters:
   - name: repoName
     type: string
+  - name: serviceName
+    type: string
   - name: branchName
     type: string
   - name: umbrellaChartBaseName
@@ -29,3 +31,17 @@ jobs:
           useConfigFile: True
           configFilePath: "GitVersion.yml"
           additionalArguments: '"/b" "${{ parameters.branchName }}"'
+  - job: HelmUmbrellaChartPublish
+    dependsOn: CalculateVersion
+    displayName: "Helm Umbrella Chart Publish"
+    variables:
+      version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
+      branch-name: ${{ parameters.umbrellaChartBaseName }}
+      repo-name: ${{ parameters.repoName }}
+    steps:
+      - template: dispatch.yml@fsm-akka-azure-pipelines
+        parameters:
+          definitionId: "14"
+          branchName: "$(branch-name)"
+          inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "service-version": "$(version)"'
+  
