@@ -1,0 +1,31 @@
+parameters:
+  - name: repoName
+    type: string
+  - name: branchName
+    type: string
+  - name: umbrellaChartBaseName
+    type: string
+  - name: infrastructureBaseBranchName
+    type: string
+  - name: valueFile
+    type: string
+
+jobs:
+  - job: CalculateVersion
+    displayName: Calculate Version
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - checkout: self
+        fetchDepth: 0
+      - task: gitversion/setup@0
+        displayName: Install GitVersion
+        inputs:
+          versionSpec: "5.x"
+      - task: gitversion/execute@0
+        name: calculateVersion
+        displayName: Calculating version
+        inputs:
+          useConfigFile: True
+          configFilePath: "GitVersion.yml"
+          additionalArguments: '"/b" "${{ parameters.branchName }}"'
