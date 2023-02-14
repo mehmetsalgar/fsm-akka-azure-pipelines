@@ -41,5 +41,5 @@ jobs:
         parameters:
           definitionId: "14"
           branchName: "$(branch-name)"
-          inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "service-version": "$(version)"'
+          inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)"'
   
