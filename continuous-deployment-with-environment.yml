@@ -10,13 +10,22 @@ parameters:
   - name: valueFile
     type: string
 
+resources:
+  repositories:
+    - repository: ServiceRepository
+      type: github
+      endpoint: mehmetsalgar
+      name: mehmetsalgar/${{ parameters.repoName }}
+      ref: ${{ parameters.branchName }}
+
 jobs:
   - job: CalculateVersion
     displayName: Calculate Version
     pool:
       vmImage: ubuntu-latest
     steps:
-      - checkout: self
+      - checkout: ServiceRepository
+        fetchTags: true
         fetchDepth: 0
       - task: gitversion/setup@0
         displayName: Install GitVersion
