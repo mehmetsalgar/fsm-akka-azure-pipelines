@@ -36,12 +36,18 @@ jobs:
     variables:
       version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
       umbrella-chart-base-branch-name: ${{ parameters.umbrellaChartBaseName }}
+      infrastructure-base-branch-name: ${{ parameters.infrastructureBaseBranchName }}
       branch-name: ${{ parameters.branchName }}
       repo-name: ${{ parameters.repoName }}
+      value-file: ${{ parameters.valueFile }}
     steps:
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "14"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
           inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)"'
-  
+      - template: dispatch.yml@fsm-akka-azure-pipelines
+        parameters:
+          definition: "17"
+          sourceBranch: "$(infrastructure-base-branch-name)"
+          inputs: '"branchName":"$(branch-name)", "valueFile": "$(value-file)"'
