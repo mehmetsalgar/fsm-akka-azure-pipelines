@@ -34,12 +34,13 @@ jobs:
     displayName: "Helm Umbrella Chart Publish"
     variables:
       version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
-      branch-name: ${{ parameters.umbrellaChartBaseName }}
+      umbrella-chart-base-branch-name: ${{ parameters.umbrellaChartBaseName }}
+      branch-name: ${{ parameters.branchName }}
       repo-name: ${{ parameters.repoName }}
     steps:
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "14"
-          branchName: "$(branch-name)"
+          sourceBranch: "$(umbrella-chart-base-branch-name)"
           inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)"'
   
