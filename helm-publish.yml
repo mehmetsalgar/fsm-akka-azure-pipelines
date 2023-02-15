@@ -1,0 +1,54 @@
+parameters:
+  - name: chartName
+    type: string
+
+jobs:
+  - job: CalculateVersion
+    displayName: Calculate Version
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - checkout: self
+        fetchDepth: 0
+        fetchTags: true
+      - task: gitversion/setup@0
+        displayName: Install GitVersion
+        inputs:
+          versionSpec: "5.x"
+      - task: gitversion/execute@0
+        name: calculateVersion
+        displayName: Calculating version
+        inputs:
+          useConfigFile: True
+          configFilePath: "GitVersion.yml"
+  - job: HelmPublish
+    displayName: Helm Publish
+    dependsOn: CalculateVersion
+    pool:
+      vmImage: ubuntu-latest
+    variables:
+      version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
+    steps:
+     - task: Gradle@3
+       env:
+         ORG_GRADLE_PROJECT_HELM_USER: $(HELM_USER)
+         ORG_GRADLE_PROJECT_HELM_PASSWORD: $(HELM_PASSWORD)
+         ORG_GRADLE_PROJECT_DOCKER_HUB_USER: $(DOCKER_HUB_USER)
+         ORG_GRADLE_PROJECT_DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
+         ORG_GRADLE_PROJECT_DOCKER_UPLOAD_USER: $(DOCKER_UPLOAD_USER)
+         ORG_GRADLE_PROJECT_DOCKER_UPLOAD_PASSWORD: $(DOCKER_UPLOAD_PASSWORD)
+       inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        gradleOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.17'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'helmPackage -Pversion=$(version) --no-daemon'
+     - pwsh: |
+         helm registry login fsmakka.azurecr.io --username $(HELM_USER) --password $(HELM_PASSWORD)
+         helm push /home/vsts/work/1/s/build/helm/charts/$env:CHART_NAME-$(version).tgz oci://fsmakka.azurecr.io/helm
+       displayName: Helm Push
+       env:
+        CHART_NAME: ${{ parameters.chartName }}
