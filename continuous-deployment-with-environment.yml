@@ -48,6 +48,6 @@ jobs:
           inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)"'
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
-          definition: "17"
+          definitionId: "17"
           sourceBranch: "$(infrastructure-base-branch-name)"
           inputs: '"branchName":"$(branch-name)", "valueFile": "$(value-file)"'
