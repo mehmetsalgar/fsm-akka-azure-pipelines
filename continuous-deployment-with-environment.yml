@@ -45,7 +45,7 @@ jobs:
         parameters:
           definitionId: "14"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
-          inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)"'
+          inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)", "umbrellaChartBaseName": "$(umbrella-chart-base-branch-name)"'
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "17"
