@@ -41,16 +41,19 @@ jobs:
       repo-name: ${{ parameters.repoName }}
       value-file: ${{ parameters.valueFile }}
     steps:
+      #Create Branch with Reuse
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "19"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
           inputs: '"branchName": "$(branch-name)"'
+      #Publish and Prepare Environment
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "14"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
           inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)", "umbrellaChartBaseName": "$(umbrella-chart-base-branch-name)"'
+      #Build Infrastructure for Environment
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "17"
