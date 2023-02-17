@@ -41,21 +41,27 @@ jobs:
       repo-name: ${{ parameters.repoName }}
       value-file: ${{ parameters.valueFile }}
     steps:
-      #Create Branch with Reuse
+      #Create Branch with Reuse <-> fsm-akka-helm-umbrella-chart-az
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "19"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
           inputs: '"branchName": "$(branch-name)"'
-      #Publish and Prepare Environment
+      #Publish and Prepare Environment <-> fsm-akka-helm-umbrella-chart-az
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "14"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
           inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)", "umbrellaChartBaseName": "$(umbrella-chart-base-branch-name)"'
-      #Build Infrastructure for Environment
+      #Build Infrastructure for Environment <-> fsm-akka-helm-infrastructure-chart-az
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "17"
           sourceBranch: "$(infrastructure-base-branch-name)"
-          inputs: '"branchName":"$(branch-name)", "valueFile": "$(value-file)"'
+          inputs: '"branchName": "$(branch-name)", "valueFile": "$(value-file)"'
+      #Build Service Environment - fsm-akka-4eyes-argocd
+      - template: dispatch.yml@fsm-akka-azure-pipelines
+        parameters:
+          definitionId: "21"
+          sourceBranch: "master"
+          inputs: '"branchName": "$(branch-name)"'
