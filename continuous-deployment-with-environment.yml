@@ -1,6 +1,8 @@
 parameters:
   - name: repoName
     type: string
+  - name: buildType
+    type: string
   - name: branchName
     type: string
   - name: umbrellaChartBaseName
@@ -46,6 +48,7 @@ jobs:
       version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
       umbrella-chart-base-branch-name: ${{ parameters.umbrellaChartBaseName }}
       infrastructure-base-branch-name: ${{ parameters.infrastructureBaseBranchName }}
+      build-type: ${{ parameters.buildType }}
       branch-name: $[dependencies.CalculateBranchName.outputs['cbn.myBranchName']]
       repo-name: ${{ parameters.repoName }}
       value-file: ${{ parameters.valueFile }}
@@ -55,22 +58,22 @@ jobs:
         parameters:
           definitionId: "19"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
-          inputs: '"branchName": "$(branch-name)"'
+          inputs: '"branchName": "$(build-type)/$(branch-name)"'
       #Publish and Prepare Environment <-> fsm-akka-helm-umbrella-chart-az
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "14"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
-          inputs: '"branchName": "$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)", "umbrellaChartBaseName": "$(umbrella-chart-base-branch-name)"'
+          inputs: '"branchName": "$(build-type)/$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)", "umbrellaChartBaseName": "$(umbrella-chart-base-branch-name)"'
       #Build Infrastructure for Environment <-> fsm-akka-helm-infrastructure-chart-az
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "17"
           sourceBranch: "$(infrastructure-base-branch-name)"
-          inputs: '"branchName": "$(branch-name)", "valueFile": "$(value-file)"'
+          inputs: '"branchName": "$(build-type)/$(branch-name)", "valueFile": "$(value-file)"'
       #Build Service Environment - fsm-akka-4eyes-argocd
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "21"
           sourceBranch: "master"
-          inputs: '"branchName": "$(branch-name)"'
+          inputs: '"branchName": "$(build-type)/$(branch-name)"'
