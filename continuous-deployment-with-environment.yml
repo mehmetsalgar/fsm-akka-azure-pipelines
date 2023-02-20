@@ -14,7 +14,7 @@ jobs:
   - job: CalculateBranchName
     steps:
       - bash: |
-          echo "##vso[task.setvariable variable=myBranchName;isoutput=true]$(branchname $bn)"
+          echo "##vso[task.setvariable variable=myBranchName;isoutput=true]$(basename $bn)"
         name: cbn
         env:
           bn: ${{ parameters.branchName }}
