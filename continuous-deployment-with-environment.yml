@@ -14,7 +14,7 @@ jobs:
   - job: CalculateBranchName
     steps:
       - script: |
-          "##vso[task.setVariable variable=myBranchName;isoutput=true;]$(basename $(Build.SourceBranch))"
+          "##vso[task.setvariable variable=myBranchName;isoutput=true]$(basename $(Build.SourceBranch))"
         name: cbn
   - job: CalculateVersion
     displayName: Calculate Version
