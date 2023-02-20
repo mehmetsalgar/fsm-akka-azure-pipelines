@@ -11,11 +11,6 @@ parameters:
     type: string
 
 jobs:
-  - job: CalculateBranchName
-    steps:
-      - script: |
-          "##vso[task.setvariable variable=myBranchName;isoutput=true]$(basename $(Build.SourceBranch))"
-        name: cbn
   - job: CalculateVersion
     displayName: Calculate Version
     pool:
@@ -37,14 +32,13 @@ jobs:
           additionalArguments: '"/b" "${{ parameters.branchName }}"'
   - job: HelmUmbrellaChartPublish
     dependsOn:
-      - CalculateBranchName
       - CalculateVersion
     displayName: "Helm Umbrella Chart Publish"
     variables:
       version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
       umbrella-chart-base-branch-name: ${{ parameters.umbrellaChartBaseName }}
       infrastructure-base-branch-name: ${{ parameters.infrastructureBaseBranchName }}
-      branch-name: $[dependencies.CalculateBranchName.outputs['cbn.myBranchName']]
+      branch-name: ${{ parameters.branchName }}
       repo-name: ${{ parameters.repoName }}
       value-file: ${{ parameters.valueFile }}
     steps:
