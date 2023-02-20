@@ -46,7 +46,7 @@ jobs:
       version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
       umbrella-chart-base-branch-name: ${{ parameters.umbrellaChartBaseName }}
       infrastructure-base-branch-name: ${{ parameters.infrastructureBaseBranchName }}
-      branch-name: $[dependencies.CalculateBranchName.outputs['cbn..myBranchName']]
+      branch-name: $[dependencies.CalculateBranchName.outputs['cbn.myBranchName']]
       repo-name: ${{ parameters.repoName }}
       value-file: ${{ parameters.valueFile }}
     steps:
