@@ -18,6 +18,8 @@ jobs:
       - task: gitversion/execute@0
         name: calculateVersion
         displayName: Calculating version
+        env:
+          IGNORE_NORMALISATION_GIT_HEAD_MOVE: 1
         inputs:
           useConfigFile: True
           configFilePath: "GitVersion.yml"
