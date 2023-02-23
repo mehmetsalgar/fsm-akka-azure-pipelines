@@ -1,10 +1,6 @@
 name: Cleanup Environment
 
 parameters:
-  - name: repoName
-    type: string
-  - name: buildType
-    type: string
   - name: branchName
     type: string
 
@@ -21,4 +17,22 @@ stages:
             parameters:
               definitionId: "28"
               sourceBranch: "master"
-              inputs: '"branchName": "$(build-type)/$(branch-name)-$(repo-name)"'
+              inputs: '"branchName": "${{ parameters.branchName }}"'
+      - job: CleanupDevEnvironment
+        dependsOn: CleanupServices
+        steps:
+          #Delete Branch Dev Environment <-> fsm-akka-dev-environment
+          - template: dispatch.yml@fsm-akka-azure-pipelines
+            parameters:
+              definitionId: "31"
+              sourceBranch: "master"
+              inputs: '"branchName": "${{ parameters.branchName }}"'
+      - job: CleanupHelmUmbrellaChartRepository
+        dependsOn: CleanupDevEnvironment
+        steps:
+          #Delete Branch Dev Environment <-> fsm-akka-dev-environment
+          - template: dispatch.yml@fsm-akka-azure-pipelines
+            parameters:
+              definitionId: "32"
+              sourceBranch: "master"
+              inputs: '"branchName": "${{ parameters.branchName }}"'
