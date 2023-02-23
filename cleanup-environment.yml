@@ -19,6 +19,6 @@ stages:
           #Cleanup Service Environment - fsm-akka-4eyes-argocd 
           - template: dispatch.yml@fsm-akka-azure-pipelines
             parameters:
-              definitionId: "21"
+              definitionId: "28"
               sourceBranch: "master"
               inputs: '"branchName": "$(build-type)/$(branch-name)-$(repo-name)"'
