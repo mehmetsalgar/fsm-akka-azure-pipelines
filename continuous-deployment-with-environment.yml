@@ -58,7 +58,7 @@ jobs:
         parameters:
           definitionId: "19"
           sourceBranch: "$(umbrella-chart-base-branch-name)"
-          inputs: '"branchName": "$(build-type)/$(branch-name)"'
+          inputs: '"branchName": "$(build-type)/$(branch-name)-$(repo-name)"'
       #Publish and Prepare Environment <-> fsm-akka-helm-umbrella-chart-az
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
@@ -70,10 +70,10 @@ jobs:
         parameters:
           definitionId: "17"
           sourceBranch: "$(infrastructure-base-branch-name)"
-          inputs: '"branchName": "$(build-type)/$(branch-name)", "valueFile": "$(value-file)"'
+          inputs: '"branchName": "$(build-type)/$(branch-name)-$(repo-name)", "valueFile": "$(value-file)"'
       #Build Service Environment - fsm-akka-4eyes-argocd
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "21"
           sourceBranch: "master"
-          inputs: '"branchName": "$(build-type)/$(branch-name)"'
+          inputs: '"branchName": "$(build-type)/$(branch-name)-$(repo-name)"'
