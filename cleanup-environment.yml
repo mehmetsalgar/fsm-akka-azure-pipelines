@@ -1,0 +1,24 @@
+name: Cleanup Environment
+
+parameters:
+  - name: repoName
+    type: string
+  - name: buildType
+    type: string
+  - name: branchName
+    type: string
+
+pool:
+  vmImage: ubuntu-latest
+  
+stages:
+  - stage: Deploy
+    jobs:
+      - job: CleanupServices
+        steps:
+          #Cleanup Service Environment - fsm-akka-4eyes-argocd 
+          - template: dispatch.yml@fsm-akka-azure-pipelines
+            parameters:
+              definitionId: "21"
+              sourceBranch: "master"
+              inputs: '"branchName": "$(build-type)/$(branch-name)-$(repo-name)"'
