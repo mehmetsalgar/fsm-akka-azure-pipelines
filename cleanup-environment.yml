@@ -21,12 +21,3 @@ jobs:
           definitionId: "31"
           sourceBranch: "master"
           inputs: '"branchName": "${{ parameters.branchName }}"'
-  - job: CleanupHelmUmbrellaChartRepository
-    dependsOn: CleanupDevEnvironment
-    steps:
-      #Delete Branch Environment <-> fsm-akka-helm-umbrella-chart-az
-      - template: dispatch.yml@fsm-akka-azure-pipelines
-        parameters:
-          definitionId: "32"
-          sourceBranch: "master"
-          inputs: '"branchName": "${{ parameters.branchName }}"'
