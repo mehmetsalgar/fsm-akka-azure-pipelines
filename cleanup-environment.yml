@@ -30,7 +30,7 @@ stages:
       - job: CleanupHelmUmbrellaChartRepository
         dependsOn: CleanupDevEnvironment
         steps:
-          #Delete Branch Dev Environment <-> fsm-akka-dev-environment
+          #Delete Branch Environment <-> fsm-akka-helm-umbrella-chart-az
           - template: dispatch.yml@fsm-akka-azure-pipelines
             parameters:
               definitionId: "32"
