@@ -32,6 +32,7 @@ jobs:
       isNative: $(native-image)
     steps:
       - bash: |
+          cd /tmp
           curl -o GraalVM.tar.gz -L https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$(GRAALVM_VERSION)/graalvm-ce-java17-linux-amd64-$(GRAALVM_VERSION).tar.gz
           tar -xzf GraalVM.tar.gz
           export PATH=/tmp/graalvm-ce-java17-$(GRAALVM_VERSION)/bin:$PATH
