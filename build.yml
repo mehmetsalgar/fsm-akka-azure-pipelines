@@ -2,9 +2,6 @@ parameters:
   - name: sourceRepo
     type: string
 
-variables:
-  java-home-options: JDKVersion
-
 jobs:
   - job: CalculateVersion
     displayName: Calculate Version
@@ -33,6 +30,7 @@ jobs:
       GRAALVM_VERSION: '22.3.1'
       source-repo: ${{ parameters.sourceRepo }}
       isNative: $(native-image)
+      java-home-options: JDKVersion
     steps:
       - bash: |
           cd /tmp
@@ -55,7 +53,7 @@ jobs:
           workingDirectory: ''
           gradleWrapperFile: 'gradlew'
           gradleOptions: '-Xmx3072m'
-          javaHomeOption: JDKVersion
+          javaHomeOption: $(java-home-options)
           jdkUserInputPath: "/tmp/graalvm-ce-java17-$(GRAALVM_VERSION)"
           jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
