@@ -63,7 +63,7 @@ jobs:
       - template: dispatch.yml@fsm-akka-azure-pipelines
         parameters:
           definitionId: "14"
-          sourceBranch: "$(umbrella-chart-base-branch-name)"
+          sourceBranch: "$(build-type)/$(branch-name)-$(repo-name)"
           inputs: '"branchName": "$(build-type)/$(branch-name)", "repoName": "$(repo-name)", "serviceVersion": "$(version)", "umbrellaChartBaseName": "$(umbrella-chart-base-branch-name)"'
       #Build Infrastructure for Environment <-> fsm-akka-helm-infrastructure-chart-az
       - template: dispatch.yml@fsm-akka-azure-pipelines
