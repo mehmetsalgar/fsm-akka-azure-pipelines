@@ -27,26 +27,34 @@ jobs:
       vmImage: ubuntu-latest
     variables:
       version: $[dependencies.CalculateVersion.outputs['calculateVersion.GitVersion.SemVer']]
+      GRAALVM_VERSION: '22.3.1'
       source-repo: ${{ parameters.sourceRepo }}
     steps:
-     - task: Gradle@3
-       env:
-         ORG_GRADLE_PROJECT_HELM_USER: $(HELM_USER)
-         ORG_GRADLE_PROJECT_HELM_PASSWORD: $(HELM_PASSWORD)
-         ORG_GRADLE_PROJECT_DOCKER_HUB_USER: $(DOCKER_HUB_USER)
-         ORG_GRADLE_PROJECT_DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
-         ORG_GRADLE_PROJECT_DOCKER_UPLOAD_USER: $(DOCKER_UPLOAD_USER)
-         ORG_GRADLE_PROJECT_DOCKER_UPLOAD_PASSWORD: $(DOCKER_UPLOAD_PASSWORD)
-       inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.17'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml'
-        tasks: 'build -Pversion=$(version) --no-daemon'
-     - pwsh: |
-         helm registry login fsmakka.azurecr.io --username $(HELM_USER) --password $(HELM_PASSWORD)
-         helm push /home/vsts/work/1/s/build/helm/charts/$(source-repo)-$(version).tgz oci://fsmakka.azurecr.io/helm
+      - bash: |
+          curl -o GraalVM.tar.gz -L https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$(GRAALVM_VERSION)/graalvm-ce-java17-linux-amd64-$(GRAALVM_VERSION).tar.gz
+          tar -xzf GraalVM.tar.gz
+          export PATH=/tmp/graalvm-ce-java17-$(GRAALVM_VERSION)/bin:$PATH
+          export JAVA_HOME=/tmp/graalvm-ce-java17-$(GRAALVM_VERSION)
+        displayName: "Install the latest GraalVM CE 22.x for Java 17 - JDK and Native Image"
+        condition: and(succeeded(), eq(variables.native-image, 'true'))
+      - task: Gradle@3
+        env:
+          ORG_GRADLE_PROJECT_HELM_USER: $(HELM_USER)
+          ORG_GRADLE_PROJECT_HELM_PASSWORD: $(HELM_PASSWORD)
+          ORG_GRADLE_PROJECT_DOCKER_HUB_USER: $(DOCKER_HUB_USER)
+          ORG_GRADLE_PROJECT_DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
+          ORG_GRADLE_PROJECT_DOCKER_UPLOAD_USER: $(DOCKER_UPLOAD_USER)
+          ORG_GRADLE_PROJECT_DOCKER_UPLOAD_PASSWORD: $(DOCKER_UPLOAD_PASSWORD)
+        inputs:
+          workingDirectory: ''
+          gradleWrapperFile: 'gradlew'
+          gradleOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.17'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          tasks: 'build -Pversion=$(version) --no-daemon'
+      - pwsh: |
+          helm registry login fsmakka.azurecr.io --username $(HELM_USER) --password $(HELM_PASSWORD)
+          helm push /home/vsts/work/1/s/build/helm/charts/$(source-repo)-$(version).tgz oci://fsmakka.azurecr.io/helm
